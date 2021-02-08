@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import AddIcon from "@material-ui/icons/Add";
 import "../../styles/NewFile.css";
 import firebase from "firebase";
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     position: "absolute",
     width: 400,
-    backgroundColor: theme.pallete.background.paper,
+    backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NewFile = () => {
-    //For styling
+  //For styling
   const classes = useStyles();
 
   const [modalStyle] = useState(getModalStyle);
@@ -45,11 +45,45 @@ const NewFile = () => {
     setOpen(false);
   };
 
-  const handleChange = e => {
-      if (e.target.files[0]){
-          setFile(e.target.files[0])
-      }
-  }
+  //When file is selected
+  const handleChange = (e) => {
+    //If file selected
+    if (e.target.files[0]) {
+      setFile(e.target.files[0]); //Put file inside the setFile state
+    }
+  };
+
+  //When user uploads file
+  const handleUpload = () => {
+    setUploading(true); //Set the setUploading state to true
+    //.ref uploads file to specific location firebase database e.g: files/{filename}. .put will write the data to the location. Once that is complete take a snapshot of data
+    storage
+      .ref(`files/${file.name}`)
+      .put(file)
+      .then((snapshot) => {
+        //file.name is the name of the user's file being uploaded
+        console.log(snapshot); //Check console for a snapshot of the data being uploaded
+
+        //Storage keeps the files in storage
+        storage
+          .ref("files")
+          .child(file.name)//Looking into specific file that has just been uploaded
+          .getDownloadURL()//Asynchronously retrieves a long lived download URL with a revokable token for file that is uploaded
+          //Once file is added, save it to database
+          .then((url) => {
+            db.collection("myFiles").add({//Saves to myFiles collection on Firebase storage
+              timestamp: firebase.firestore.FieldValue.serverTimestamp(),//Adds timestamp for when file was added in specific area
+              caption: file.name,//Stores a caption of the filename
+              fileUrl: url,//The url of the file that has been uploaded so you are able to download the file aswell
+              size: snapshot._delegate.bytesTransferred,//Size of file that has been uploaded
+            });
+            //Setting state to update UI interface after handleChange is completed
+            setUploading(false);
+            setOpen(false);
+            setFile(null);
+          });
+      });
+  };
 
   return (
     <div className="newFile">
