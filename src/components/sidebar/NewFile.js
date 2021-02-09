@@ -77,7 +77,7 @@ const NewFile = () => {
               fileUrl: url,//The url of the file that has been uploaded so you are able to download the file aswell
               size: snapshot._delegate.bytesTransferred,//Size of file that has been uploaded
             });
-            //Setting state to update UI interface after handleChange is completed
+            //Setting state to update UI interface after handleUpload function has completed
             setUploading(false);
             setOpen(false);
             setFile(null);

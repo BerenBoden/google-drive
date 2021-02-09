@@ -1,0 +1,42 @@
+.app__main {
+    display: flex;
+}
+
+.app__login > img {
+    width: 140px;
+}
+
+.app__login{
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    place-items: center;
+}
+
+.app__login > button {
+    border: none;
+    font-size: 24px;
+    background-color: rgb(67, 130, 244);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    -ms-border-radius: 6px;
+    -o-border-radius: 6px;
+    transition: all 0.2s;
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -ms-transition: all 0.2s;
+    -o-transition: all 0.2s;
+}
+
+.app__login > button:hover {
+    cursor: pointer;
+    background-color: rgb(49, 94, 179);
+    transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    -o-transform: scale(1.1);
+}
